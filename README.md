@@ -123,22 +123,21 @@ data
 ```
 
 ## 5. Re-training
-* You should put 'vicuna' to your model-name
 * output_dir folder should be contained **'checkpoint-*'**
 * num_train_epochs must have started from **2** or more
 
 ```python
 !python /content/LLaVA/llava/train/train_mem.py \
-    --model_name_or_path /content/LLaVA/vicuna-7b-v1.3\
+    --model_name_or_path /content/LLaVA/vicuna-7b-v1.3 \
     --version v1 \
     --data_path /content/dacon-multimodal-vqa/output.json \
-    --image_folder /content/dacon-multimodal-vqa/train \
+    --image_folder /content/dacon-multimodal-vqa/image/train \
     --vision_tower openai/clip-vit-large-patch14 \
     --tune_mm_mlp_adapter True \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end \
     --bf16 True \
-    --output_dir /content/drive/MyDrive/llava/checkpoint-2400 \
+    --output_dir /content/drive/MyDrive/llava \
     --num_train_epochs 2 \
     --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 4 \
@@ -149,7 +148,7 @@ data
     --save_total_limit 1 \
     --learning_rate 2e-3 \
     --weight_decay 0. \
-    --warmup_ratio 0.00 \
+    --warmup_ratio 0.0 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 True \
@@ -169,13 +168,13 @@ from google.colab import drive
 drive.mount('/content/drive')
 ```
 
-* You should change output_dir name 'checkpoint-*' to 'llava-*"
-  * May be you might get a difference whether the name contains 'llava' or not
+* You should change output_dir name 'checkpoint-*' to 'LLaVA-version"
+  * May be you might get a difference whether the name contains 'LLaVA' or not
 
 ```python
 %cd /content/LLaVA
 !python /content/dacon-multimodal-vqa/eval/model_vqa.py \
-    --model-path /content/drive/MyDrive/llava/checkpoint/llava-2400 \
+    --model-path /content/drive/MyDrive/llava/checkpoint/LLaVA-7B-v1.3 \
     --model-base lmsys/vicuna-7b-v1.3 \
     --question-file \
     /content/dacon-multimodal-vqa/test.jsonl \
