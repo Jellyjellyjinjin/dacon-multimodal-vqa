@@ -41,7 +41,7 @@ data
 ```
 ## 2-1. train_Data
 * LLaVA/llava/train/train.py
-![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/d526ad41-bac4-45a1-84e3-2deb8b8ac33e)
+
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/bad06052-2ed7-4a8d-8e02-71ee1c985700)
 
 ```python
