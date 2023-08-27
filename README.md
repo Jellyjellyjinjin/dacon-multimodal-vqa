@@ -40,7 +40,8 @@ data
      └─  *answer : 질문에 대한 답변
 ```
 ## 2-1. train_Data
-* LLaVA/llava/train/train.py
+
+**CHECK**  LLaVA/llava/train/train.py 
 
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/d526ad41-bac4-45a1-84e3-2deb8b8ac33e)
 
@@ -80,7 +81,9 @@ with open('output.json', 'w') as f:
 ```
 
 ## 2-2. test_Data
-* LLaVA/llava/eval/model_vqa.py
+
+**CHECK** LLaVA/llava/eval/model_vqa.py
+
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/41604dd4-c0a8-453e-980c-2528fe467059)
 
 ```python
@@ -110,7 +113,7 @@ with open(jsonl_output_file, "w") as file:
         file.write("\n")
 ```
 ## 2-3. test_answer
-* LLaVA/llava/eval/model_vqa.py
+**EDIT** LLaVA/llava/eval/model_vqa.py
  ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/ad900fec-fe9a-4c57-83cc-ddd3f5695749)
 
 ## 3. Setup
@@ -182,7 +185,7 @@ with open(jsonl_output_file, "w") as file:
 ## 5. Re-training
 * output_dir folder should be contained **'checkpoint-*'**
 * num_train_epochs must have started from **2** or more
-* **llava/train/train.py**
+ **CHECK** llava/train/train.py
    ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/a6705c39-567a-43ec-ba9b-92bd4d793cd2)
 
 
@@ -220,7 +223,7 @@ with open(jsonl_output_file, "w") as file:
 ```
   
 ## 6. Inference
-* LLaVA/llava/model/builder.py
+**EDIT** LLaVA/llava/model/builder.py
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/08f9f546-16a4-4866-8c22-55b9eda57ece)
 
 ```python
