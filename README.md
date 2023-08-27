@@ -39,6 +39,78 @@ data
      ├─  ID : 질문 ID
      └─  *answer : 질문에 대한 답변
 ```
+## 2-1. train_Data
+* LLaVA/llava/train/train.py
+![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/d526ad41-bac4-45a1-84e3-2deb8b8ac33e)
+
+```python
+import zipfile
+import os
+import csv
+import json
+
+# ----------------------------------------------------------------
+# make 'output.json'
+with open('/content/dacon-multimodal-vqa/train.csv', 'r') as f:
+    reader = csv.reader(f)
+    next(reader)
+    data = list(reader)
+
+json_data = []
+for row in data:
+    id, image_id, question, answer = row
+    json_data.append({
+        "id": id,
+        "image": "/content/dacon-multimodal-vqa/image/train/" + image_id + ".jpg",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "<image>\n" + question
+            },
+            {
+                "from": "gpt",
+                "value": answer
+            }
+        ]
+    })
+
+with open('output.json', 'w') as f:
+    json.dump(json_data, f, indent=4)
+```
+
+## 2-2. test_Data
+* LLaVA/llava/eval/model_vqa.py
+![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/41604dd4-c0a8-453e-980c-2528fe467059)
+
+```python
+# make 'test.json'
+with open('/content/test.csv', 'r') as f:
+    reader = csv.reader(f)
+    next(reader)
+    data = list(reader)
+
+json_data = []
+for row in data:
+    id, image_id, question = row
+    json_data.append({
+        "question_id": id,
+        "image": "/content/image/test/" + image_id + ".jpg",
+        "text": question
+        })
+
+# jsonl file path
+jsonl_output_file = "/content/test.jsonl"
+
+# JSON to JSONL 
+with open(jsonl_output_file, "w") as file:
+    for obj in json_data:
+        # write file (JSON +(\n)).
+        json.dump(obj, file)
+        file.write("\n")
+```
+## 2-3. test_answer
+* LLaVA/llava/eval/model_vqa.py
+ ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/ad900fec-fe9a-4c57-83cc-ddd3f5695749)
 
 ## 3. Setup
 * In Colab-PRO or PRO+ Users only
@@ -63,22 +135,6 @@ data
 !git clone https://huggingface.co/lmsys/vicuna-7b-v1.3
 ```
 
-### Download Data
-```python
-# Download directly
-!gdown https://drive.google.com/u/0/uc?id=1a9XB3r83ZCFWLOHBp8ooz3zQFl9rEIei&export=download
-```
-
-### Preprocessing
-* You could get 'output.json' and 'test.json' file
-* If else, download our file and run it in your '/content' directory
-```python
-%cd /content
-!git clone https://github.com/pimang62/dacon-multimodal-vqa.git
-
-%cd /content/dacon-multimodal-vqa
-!python preprocessing.py
-```
 
 ## 4. Run
 * For recording wandb
@@ -125,6 +181,10 @@ data
 ## 5. Re-training
 * output_dir folder should be contained **'checkpoint-*'**
 * num_train_epochs must have started from **2** or more
+* **llava/train/train.py**
+   ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/a6705c39-567a-43ec-ba9b-92bd4d793cd2)
+
+
 
 ```python
 !python /content/LLaVA/llava/train/train_mem.py \
@@ -170,6 +230,10 @@ drive.mount('/content/drive')
 
 * You should change output_dir name 'checkpoint-*' to 'LLaVA-version"
   * May be you might get a difference whether the name contains 'LLaVA' or not
+    *LLaVA/llava/model/builder.py      
+     !![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/1ed6a2db-6d7b-4c02-a95c-00b3d920c55b)
+
+
 
 ```python
 %cd /content/LLaVA
