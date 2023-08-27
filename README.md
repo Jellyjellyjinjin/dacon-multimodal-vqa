@@ -39,7 +39,7 @@ data
      ├─  ID : 질문 ID
      └─  *answer : 질문에 대한 답변
 ```
-## 2-1. train_Data
+## 2-1. input_train
 
 **CHECK**  LLaVA/llava/train/train.py 
 
@@ -79,8 +79,8 @@ for row in data:
 with open('output.json', 'w') as f:
     json.dump(json_data, f, indent=4)
 ```
-
-## 2-2. test_Data
+![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/7d3aa577-6701-4340-8274-b12e1da43f80)
+## 2-2. input_test
 
 **CHECK** LLaVA/llava/eval/model_vqa.py
 
@@ -111,8 +111,9 @@ with open(jsonl_output_file, "w") as file:
         # write file (JSON +(\n)).
         json.dump(obj, file)
         file.write("\n")
+
 ```
-## 2-3. test_answer
+## 2-3. output_test
 **EDIT** LLaVA/llava/eval/model_vqa.py
  ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/ad900fec-fe9a-4c57-83cc-ddd3f5695749)
 
@@ -226,6 +227,13 @@ with open(jsonl_output_file, "w") as file:
 **EDIT** LLaVA/llava/model/builder.py
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/08f9f546-16a4-4866-8c22-55b9eda57ece)
 
+
+* You should change output_dir name 'checkpoint-*' to **'LLaVA-version'**
+  * May be you might get a difference whether the name contains 'LLaVA' or not
+  * **CHECK**LLaVA/llava/model/builder.py     
+     !![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/1ed6a2db-6d7b-4c02-a95c-00b3d920c55b)
+
+
 ```python
 %cd /content
 
@@ -233,14 +241,6 @@ with open(jsonl_output_file, "w") as file:
 from google.colab import drive
 drive.mount('/content/drive')
 ```
-
-* You should change output_dir name 'checkpoint-*' to 'LLaVA-version"
-  * May be you might get a difference whether the name contains 'LLaVA' or not
-    *LLaVA/llava/model/builder.py      
-     !![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/1ed6a2db-6d7b-4c02-a95c-00b3d920c55b)
-
-
-
 ```python
 %cd /content/LLaVA
 !python /content/dacon-multimodal-vqa/eval/model_vqa.py \
