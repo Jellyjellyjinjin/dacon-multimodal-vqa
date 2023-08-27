@@ -220,6 +220,8 @@ with open(jsonl_output_file, "w") as file:
 ```
   
 ## 6. Inference
+* LLaVA/llava/model/builder.py
+![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/08f9f546-16a4-4866-8c22-55b9eda57ece)
 
 ```python
 %cd /content
