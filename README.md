@@ -259,3 +259,111 @@ drive.mount('/content/drive')
 %cd /content/dacon-multimodal-vqa
 !python submission.py
 ```
+-----------------------------------------------------------------------------------------------------------
+## Visual Instruction tuning Zero_shot
+
+```python
+!python3 /content/LLaVA/llava/eval/model_vqa.py \
+    --model-path liuhaotian/llava-v1-0719-336px-lora-merge-vicuna-13b-v1.3\
+    --question-file \
+    /content/test13.jsonl \
+    --image-folder \
+   /content/image/test \
+    --answers-file \
+    /content/result14.jsonl
+```
+**output**
+![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/3e7ddcdf-473d-4d6c-9026-f27772752dcd)
+
+
+**1. Devide question**
+1.   What color?  ㅡ>  def color () : 문장안에서 색에 해당하는 단어만 추출 
+2.   How many? ㅡ> def num() : 문장안에서 숫자에 해당하는 단어만 추출 
+3. etc.
+
+```python
+def process_sentence(question, answer):
+    if question.startswith("What color"):
+        # "What color"로 시작하는 경우
+        return color(answer, rainbow_colors)
+    elif question.startswith("How many"):
+        # "How many"로 시작하는 경우
+        return num(answer, numword)
+    else:
+        # 위 두 경우에 해당하지 않는 경우
+        return answer
+```
+**2. Remove answer's stopword**
+```python
+def remove_articles(text):
+
+    # 소문자로 변환
+    text = text.lower()
+
+    # 정규 표현식을 사용하여 관사 제거
+    text = re.sub(r'\b(a|an|the|in|on|at|by|with|from|)\b', '', text)
+
+    # 여러 개의 공백을 단일 공백으로 대체
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    # 선택된 단어를 다시 결합
+    result_text = ''.join(text)
+
+    return result_text
+```
+**3.Remove duplicate words in the answer**
+
+```python
+from tqdm import tqdm
+
+plzan = []
+
+for qdoc, adoc in tqdm(zip(json_data2, processed_answers)):
+    if " and " in adoc:
+      if len(adoc.split()) >= 5:
+        adoc = remove_words_from_b_if_in_a(qdoc,adoc)
+        qdoc = qdoc[:3]
+        keywords = kw_model.extract_keywords(qdoc)
+        a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
+        plzan.append(a[0][0])
+      else :
+        plzan.append(adoc)
+    else :
+      adoc = remove_words_from_b_if_in_a(qdoc,adoc)
+      qdoc = qdoc[:3]
+      keywords = kw_model.extract_keywords(qdoc)
+      a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
+      plzan.append(a[0][0])
+```
+**4.Extract answer's keywords**
+```python
+from tqdm import tqdm
+
+plzan = []
+
+for qdoc, adoc in tqdm(zip(json_data2, processed_answers)):
+    if " and " in adoc:
+      if len(adoc.split()) >= 5:
+        adoc = remove_words_from_b_if_in_a(qdoc,adoc)
+        qdoc = qdoc[:3]
+        keywords = kw_model.extract_keywords(qdoc)
+        a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
+        plzan.append(a[0][0])
+      else :
+        plzan.append(adoc)
+    else :
+      adoc = remove_words_from_b_if_in_a(qdoc,adoc)
+      qdoc = qdoc[:3]
+      keywords = kw_model.extract_keywords(qdoc)
+      a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
+      plzan.append(a[0][0])
+```
+**5.convert string to num**
+```python
+def convert_word_to_number(text):
+    words = text.lower().split()
+    for word in words:
+        if word in number_words_dict:
+            return str(number_words_dict[word])
+    return text
+```
