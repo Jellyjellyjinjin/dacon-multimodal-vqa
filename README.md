@@ -229,18 +229,9 @@ with open(jsonl_output_file, "w") as file:
 
 
 * You should change output_dir name 'checkpoint-*' to **'LLaVA-version'**
-  * May be you might get a difference whether the name contains 'LLaVA' or not
   * **CHECK**LLaVA/llava/model/builder.py     
      !![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/1ed6a2db-6d7b-4c02-a95c-00b3d920c55b)
 
-
-```python
-%cd /content
-
-# go to your output directory
-from google.colab import drive
-drive.mount('/content/drive')
-```
 ```python
 %cd /content/LLaVA
 !python /content/dacon-multimodal-vqa/eval/model_vqa.py \
