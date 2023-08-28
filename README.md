@@ -39,9 +39,9 @@ data
      ├─  ID : 질문 ID
      └─  *answer : 질문에 대한 답변
 ```
-## 2-1. input_train
+## 2-1. input_train(csv to json)
 
-**CHECK**  LLaVA/llava/train/train.py 
+ LLaVA/llava/train/train.py 
 
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/d526ad41-bac4-45a1-84e3-2deb8b8ac33e)
 
@@ -80,9 +80,9 @@ with open('output.json', 'w') as f:
     json.dump(json_data, f, indent=4)
 ```
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/7d3aa577-6701-4340-8274-b12e1da43f80)
-## 2-2. input_test
+## 2-2. input_test(json to jsonl)
 
-**CHECK** LLaVA/llava/eval/model_vqa.py
+ LLaVA/llava/eval/model_vqa.py
 
 ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/41604dd4-c0a8-453e-980c-2528fe467059)
 
@@ -186,7 +186,7 @@ with open(jsonl_output_file, "w") as file:
 ## 5. Re-training
 * output_dir folder should be contained **'checkpoint-*'**
 * num_train_epochs must have started from **2** or more
- **CHECK** llava/train/train.py
+  llava/train/train.py
    ![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/a6705c39-567a-43ec-ba9b-92bd4d793cd2)
 
 
@@ -229,7 +229,7 @@ with open(jsonl_output_file, "w") as file:
 
 
 * You should change output_dir name 'checkpoint-*' to **'LLaVA-version'**
-  * **CHECK**LLaVA/llava/model/builder.py     
+  * LLaVA/llava/model/builder.py     
      !![image](https://github.com/Jellyjellyjinjin/dacon-multimodal-vqa/assets/118363210/1ed6a2db-6d7b-4c02-a95c-00b3d920c55b)
 
 ```python
@@ -307,24 +307,20 @@ def remove_articles(text):
 ```python
 from tqdm import tqdm
 
-plzan = []
+def remove_words_from_b_if_in_a(sentence_a, sentence_b):
+    # 문장 A와 B를 공백을 기준으로 단어로 분리
+    sentencea_a = sentence_a[:-1]
+    words_a = sentencea_a.split()
+    words_b = sentence_b.split()
 
-for qdoc, adoc in tqdm(zip(json_data2, processed_answers)):
-    if " and " in adoc:
-      if len(adoc.split()) >= 5:
-        adoc = remove_words_from_b_if_in_a(qdoc,adoc)
-        qdoc = qdoc[:3]
-        keywords = kw_model.extract_keywords(qdoc)
-        a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
-        plzan.append(a[0][0])
-      else :
-        plzan.append(adoc)
-    else :
-      adoc = remove_words_from_b_if_in_a(qdoc,adoc)
-      qdoc = qdoc[:3]
-      keywords = kw_model.extract_keywords(qdoc)
-      a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
-      plzan.append(a[0][0])
+    if all(word in 'or' and word in 'and' and word in 'many' for word in words_a):
+      df2 = [i for i  in words_b if i not in words_a]
+      return df2
+    else:
+      return sentence_b
+
+
+processed_answers = [remove_articles(answer) for answer in  processed_answers]
 ```
 **4.Extract answer's keywords**
 ```python
@@ -336,7 +332,6 @@ for qdoc, adoc in tqdm(zip(json_data2, processed_answers)):
     if " and " in adoc:
       if len(adoc.split()) >= 5:
         adoc = remove_words_from_b_if_in_a(qdoc,adoc)
-        qdoc = qdoc[:3]
         keywords = kw_model.extract_keywords(qdoc)
         a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
         plzan.append(a[0][0])
@@ -344,7 +339,6 @@ for qdoc, adoc in tqdm(zip(json_data2, processed_answers)):
         plzan.append(adoc)
     else :
       adoc = remove_words_from_b_if_in_a(qdoc,adoc)
-      qdoc = qdoc[:3]
       keywords = kw_model.extract_keywords(qdoc)
       a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
       plzan.append(a[0][0])
