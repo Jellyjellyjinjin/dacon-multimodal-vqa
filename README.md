@@ -284,6 +284,36 @@ def process_sentence(question, answer):
         # 위 두 경우에 해당하지 않는 경우
         return answer
 ```
+**1-2. color(),num()**
+```python
+#색상검사
+def color(sentence, target_words):
+    # 문장을 소문자로 변환하여 대소문자 무시
+    sentence = sentence.lower()
+
+    # 타겟 단어 리스트에서 하나씩 검사
+    for target_word in target_words:
+        if target_word in sentence:
+          return target_word  # 문장에서 단어를 찾으면 해당 단어를 반환하고 함수 종료
+    return sentence  # 문장에서 단어를 찾지 못하면 원래 문장을 반환
+
+
+#숫자검사
+def num(sentence, target_words):
+    # 문장을 소문자로 변환하여 대소문자 무시
+    sentence = sentence.lower()
+
+    # 타겟 단어 리스트에서 하나씩 검사
+    for target_word in target_words:
+        if target_word in sentence:
+          return target_word  # 문장에서 단어를 찾으면 해당 단어를 반환하고 함수 종료
+    return sentence  # 문장에서 단어를 찾지 못하면 원래 문장을 반환
+
+
+rainbow_colors = ["black","white","red", "orange", "yellow", "green","blue","purple","beige","pink","gold","brown"]
+numword = ["zero","one","two","three","four", "five","six", "seven", "eight","nine","many"]
+
+```
 **2. Remove answer's stopword**
 ```python
 def remove_articles(text):
