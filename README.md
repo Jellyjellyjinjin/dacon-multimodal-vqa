@@ -332,14 +332,12 @@ for qdoc, adoc in tqdm(zip(json_data2, processed_answers)):
     if " and " in adoc:
       if len(adoc.split()) >= 5:
         adoc = remove_words_from_b_if_in_a(qdoc,adoc)
-        keywords = kw_model.extract_keywords(qdoc)
         a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
         plzan.append(a[0][0])
       else :
         plzan.append(adoc)
     else :
       adoc = remove_words_from_b_if_in_a(qdoc,adoc)
-      keywords = kw_model.extract_keywords(qdoc)
       a = kw_model.extract_keywords(adoc, keyphrase_ngram_range=(1,1), stop_words=None)
       plzan.append(a[0][0])
 ```
